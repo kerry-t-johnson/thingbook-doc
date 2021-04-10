@@ -1,9 +1,14 @@
 @startuml "Publish a Composite Datastream"
 actor ProducerOrganization
-actor ConsumerOrganization
+actor ConsumerOrganization1
+actor ConsumerOrganizationN
 
-ProducerOrganization    -> ThingBook : Observation
-ConsumerOrganization    <- ThingBook : Observation
+group Prerequisite
+ProducerOrganization    <- ThingBook: Subscribe <<SensorThings>>
+end
+ProducerOrganization    -> ThingBook : Observation <<SensorThings>>
+ConsumerOrganization1    <- ThingBook : Observation <<SensorThings>>
+ConsumerOrganizationN    <- ThingBook : Observation <<SensorThings>>
 
 hide footbox
 @enduml
