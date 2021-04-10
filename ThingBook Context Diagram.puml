@@ -1,0 +1,35 @@
+@startuml "ThingBook Context Diagram"
+hide methods
+
+package ThingBook {
+
+    class "thingbook-api" {
+
+    }
+
+    class "thingbook-ui" {
+
+    }
+
+    class "thingbook-server" {
+
+    }
+}
+
+
+    namespace Organization.A {
+        class "sensor-things"
+    }
+
+    namespace Organization.Z {
+        class "sensor-things"
+    }
+
+"thingbook-ui"          o--         "thingbook-api"
+"thingbook-ui"        -right->      "thingbook-server"
+"thingbook-server"      o--         "thingbook-api"
+"thingbook-server"      -->         "Organization.A.sensor-things"
+"thingbook-server"      -->         "Organization.Z.sensor-things"
+"Organization.A"    -[hidden]right- "Organization.Z"
+
+@enduml

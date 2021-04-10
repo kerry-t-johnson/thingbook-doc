@@ -1,0 +1,86 @@
+@startuml "ThingBook Domain Objects Class Diagram"
+package "Domain Layer" {
+    hide methods
+    class User <<domain object>> {
+        emailAddress
+    }
+
+    enum Role <<domain object>> {
+        Organization Manager
+        Data Manager
+        User Manager
+    }
+
+    class OrganizationRole <<domain object>> {
+        organizationUUID
+        roleUUID
+    }
+
+    enum OrganizationStatus <<domain object>> {
+        Pending
+        Verified
+    }
+
+    class Organization <<domain object>> {
+        name
+        domainName
+        sensorThingsAPI
+    }
+
+    class Observation <<domain object>>
+    class CompositeDataStream <<domain object>>
+    class DataType <<domain object>>
+
+    class DataSharingTemplate <<domain object>> {
+        name
+        uuid
+        version
+        manualApproval
+    }
+
+    class DataSharingAgreement <<domain object>> {
+        uuid
+        state
+        expirationDateTime
+        qos
+        producerUUID
+        consumerUUID
+        electronicSignature
+    }
+
+    enum DataSharingFragmentType <<domain object>> {
+        Authorization
+        Obligation
+        Prohibition
+    }
+
+
+    class DataSharingFragment <<domain object>> {
+        name
+        text
+    }
+
+    class DataStream <<domain object>> {
+        dataStreamURL
+        dataTypeUUID
+    }
+}
+
+User                    *-right-    "0..*"  OrganizationRole
+User                    o--                 Organization
+OrganizationRole        o-right-            Role
+Organization            *-left-             OrganizationStatus
+OrganizationRole        o--                 Organization
+CompositeDataStream     -->                 Observation : produces
+Organization        "1" o--         "0..*"  DataStream : owns
+Organization            o--                 DataSharingTemplate
+DataStream              -->                 CompositeDataStream : contributes to
+Organization        "1" o--         "0..*"  Organization : sub-organizations
+Organization            o--                 DataSharingAgreement
+DataSharingTemplate     <-                  DataSharingAgreement : parent
+DataSharingAgreement    -->                 CompositeDataStream : governs
+DataStream              o--         "1"     DataType
+CompositeDataStream     o-          "1..*"  DataType
+DataSharingTemplate     o--         "0..*"  DataSharingFragment
+DataSharingFragment     *-down-             DataSharingFragmentType
+@enduml

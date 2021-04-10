@@ -1,0 +1,53 @@
+@startuml "ThingBook System Thread"
+actor ProducerUser
+actor ConsumerUser
+box Test Framework
+actor Producer
+actor Consumer
+end box
+group User Management
+Producer    -[#green]> ThingBook : <font color=green><b>Register (API)</b></font>
+create "Producer:\nUser"
+ThingBook   -[#green]> "Producer:\nUser" : <font color=green><b>Create</b></font>
+...
+Consumer    -[#green]> ThingBook : <font color=green><b>Register (API)</b></font>
+create "Consumer:\nUser"
+ThingBook   -[#green]> "Consumer:\nUser" : <font color=green><b>Create</b></font>
+end
+...
+group Organization Management
+Producer    -[#green]> ThingBook : <font color=green><b>Establish an Organization (API)</b></font>
+create "Producer:\nOrganization"
+ThingBook   -[#green]> "Producer:\nOrganization" : <font color=green><b>Create</b></font>
+...
+Consumer    -[#green]> ThingBook : <font color=green><b>Establish an Organization (API)</b></font>
+create "Consumer:\nOrganization"
+ThingBook   -[#green]> "Consumer:\nOrganization" : <font color=green><b>Create</b></font>
+end
+...
+group Data Management
+Producer    -[#green]> ThingBook : <font color=green><b>Create a Data Sharing Template (API)</b></font>
+create DataSharingTemplate
+ThingBook               -[#green]> DataSharingTemplate : <font color=green><b>Create</b></font>
+...
+Consumer    -[#green]> ThingBook : <font color=green><b>Establish a Data Sharing Agreement (API)</b></font>
+Consumer    -[#green]> DataSharingTemplate : <font color=green><b>Select</b></font>
+create DataSharingAgreement
+ThingBook               -[#green]> DataSharingAgreement : <font color=green><b>Create (API)</b></font>
+Consumer    -[#green]> DataSharingAgreement : <font color=green><b>Agree (API)</b></font>
+DataSharingAgreement    -[#green]> Producer : <font color=green><b>Subscribe (MQTT)</b></font>
+...
+Producer    -[#green]> DataSharingAgreement : <font color=green><b>Observation (MQTT)</b></font>
+Consumer    <[#red]-   DataSharingAgreement : <font color=red><b>Observation (MQTT)</b></font>
+end
+...
+group User Interface
+ProducerUser -[#red]>    ThingBook : <font color=red><b>Manage DataSharing Agreement</b></font>
+ThingBook   -[#red]>    DataSharingAgreement : <font color=red><b>Manage</b></font>
+...
+ConsumerUser -[#red]>    ThingBook : <font color=red><b>Manage DataSharing Agreement</b></font>
+ThingBook   -[#red]>    DataSharingAgreement : <font color=red><b>Manage</b></font>
+end
+
+hide footbox
+@enduml
